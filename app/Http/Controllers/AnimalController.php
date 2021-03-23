@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\AnimalCollection;
+use App\Http\Resources\AnimalResource;
 use App\Models\Animal;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
@@ -66,7 +68,7 @@ class AnimalController extends Controller
 
         // 沒有快取紀錄記住資料，並設定60秒過期，快取名稱使用網址命名。
         return Cache::remember($fullUrl, 60, function () use ($animals) {
-            return response($animals, Response::HTTP_OK);
+            return new AnimalCollection($animals);
         });
     }
 
@@ -79,7 +81,7 @@ class AnimalController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-            'type_id' => 'nullable|integer',        // 允許null或整數
+            'type_id' => 'nullable|exists:types,id',      // 允許null或整數
             'name' => 'required|string|max:255',    // 必填文字最多255字元
             // 允許null或日期格式，使用PHP strtotime檢查傳入的日期字串
             'birthday' => 'nullable|date',
@@ -106,7 +108,7 @@ class AnimalController extends Controller
      */
     public function show(Animal $animal)
     {
-        return response($animal, Response::HTTP_OK);
+        return new AnimalResource($animal);
     }
 
     /**
