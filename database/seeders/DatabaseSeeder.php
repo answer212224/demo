@@ -2,7 +2,11 @@
 
 namespace Database\Seeders;
 
+use App\Models\Animal;
+use App\Models\User;
+use App\Models\Type;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Schema;
 
 class DatabaseSeeder extends Seeder
 {
@@ -13,6 +17,19 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // \App\Models\User::factory(10)->create();
+        // User::factory(10)->create();
+        // 取消外鍵約束（後面章節將介紹外鍵約束）
+        Schema::disableForeignKeyConstraints();
+        Animal::truncate(); // 清空animals資料表 ID歸零
+        User::truncate(); // 清空users資料表 ID歸零
+        Type::truncate(); // 清空types資料表 ID歸零
+        // 先產生Type 資料
+        Type::factory(5)->create();
+        // 建立5筆會員測試資料
+        User::factory(5)->create();
+        // 建立一萬筆動物測試資料
+        Animal::factory(100)->create();
+        // 開啟外鍵約束
+        Schema::enableForeignKeyConstraints();
     }
 }
