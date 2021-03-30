@@ -10,8 +10,11 @@ use Laravel\Passport\HasApiTokens;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasFactory, Notifiable;
+    use HasApiTokens;
 
+    const ADMIN_USER = 'admin';
+    const MEMBER_USER = 'member';
     /**
      * The attributes that are mass assignable.
      *
@@ -42,8 +45,19 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    /**
+     * 會員與動物資源的關聯
+     */
     public function animals()
     {
         return $this->hasMany('App\Models\Animal', 'user_id', 'id');
+    }
+
+    /**
+     * 是否為管理員（減少偶合使用）
+     */
+    public function isAdmin()
+    {
+        return $this->permission === User::ADMIN_USER;
     }
 }
