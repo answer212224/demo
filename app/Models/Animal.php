@@ -17,7 +17,7 @@ class Animal extends Model
         'fix',
         'description',
         'personality',
-        'user_id', //不建議允許批量寫入，將在後續身分驗證章節修改這邊的設定。
+        // 'user_id', //不建議允許批量寫入，將在後續身分驗證章節修改這邊的設定。
     ];
 
     public function type()
